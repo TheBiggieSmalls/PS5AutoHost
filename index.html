@@ -68,6 +68,8 @@
         });
         document.getElementById("current-fw").innerHTML = fw_str;
         registerAppCacheEventHandlers();
+        registerL2ButtonHandler();
+        registerAppCacheEventHandlers();
 registerL2ButtonHandler();
 
 // Auto-start on first load
@@ -83,8 +85,6 @@ if (appCache.status === appCache.IDLE || appCache.status === appCache.UNCACHED) 
     appCache.addEventListener('cached', onCacheReady);
     appCache.addEventListener('noupdate', onCacheReady);
 }
-    }
-};
     </script>
 </body>
 
