@@ -273,7 +273,6 @@ async function removeToast(toast) {
 }
 
 
-// Zoek de functie populatePayloadsPage in custom_host_stuff.js
 function populatePayloadsPage(wkOnlyMode = false) {
     const payloadsView = document.getElementById('payloads-view');
 
@@ -281,15 +280,49 @@ function populatePayloadsPage(wkOnlyMode = false) {
         payloadsView.removeChild(payloadsView.firstChild);
     }
 
-    // ... (bestaande logica om knoppen aan te maken blijft gelijk) ...
+    // Gebruik de correcte variabele: payload_map
+    const payloads = payload_map; 
+
     for (const payload of payloads) {
-        // ... (houd alle bestaande code binnen de loop aan)
+        if (wkOnlyMode && !payload.toPort && !payload.customAction) {
+            continue;
+        }
+
+        if (payload.supportedFirmwares && !payload.supportedFirmwares.some(fwPrefix => window.fw_str.startsWith(fwPrefix))) {
+            continue;
+        }
+
+        const payloadButton = document.createElement("a");
+        payloadButton.classList.add("btn");
+        payloadButton.classList.add("w-100");
+        payloadButton.tabIndex = 0;
+        // We voegen een extra class toe zodat we ze makkelijk kunnen verbergen via CSS
+        payloadButton.classList.add("hidden-payload-btn"); 
+
+        const payloadTitle = document.createElement("p");
+        payloadTitle.classList.add("payload-btn-title");
+        payloadTitle.textContent = payload.displayTitle;
+
+        const payloadDescription = document.createElement("p");
+        payloadDescription.classList.add("payload-btn-description");
+        payloadDescription.textContent = payload.description;
+
+        const payloadInfo = document.createElement("p");
+        payloadInfo.classList.add("payload-btn-info");
+        payloadInfo.innerHTML = `v${payload.version} &centerdot; ${payload.author}`;
+
+        payloadButton.appendChild(payloadTitle);
+        payloadButton.appendChild(payloadDescription);
+        payloadButton.appendChild(payloadInfo);
         
-        // Voeg aan het einde van de loop de knop toe zoals voorheen
+        payloadButton.addEventListener("click", function () {
+            window.dispatchEvent(new CustomEvent(MAINLOOP_EXECUTE_PAYLOAD_REQUEST, { detail: payload }));
+        });
+
         payloadsView.appendChild(payloadButton);
     }
 
-    // VOEG DIT TOE aan het einde van de functie:
+    // Voeg de overlay toe aan het einde van de view
     const overlay = document.createElement("div");
     overlay.id = "payload-loading-overlay";
     overlay.className = "payload-overlay";

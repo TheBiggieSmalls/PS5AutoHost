@@ -351,26 +351,28 @@ a:focus {
     display: none !important;
 }
 
-/* De stijl voor de nieuwe overlay */
+/* Verberg de knoppen specifiek met de nieuwe class */
+.hidden-payload-btn {
+    display: none !important;
+}
+
+/* Overlay styling */
 .payload-overlay {
-    grid-column: 1 / -1; /* Zorgt dat het over de hele breedte van de grid gaat */
+    grid-column: 1 / -1; 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(18, 18, 18, 0.8); /* Matcht je achtergrondkleur */
+    padding: 5rem 2rem;
     color: white;
     text-align: center;
-    border-radius: 1.5rem;
-    padding: 2rem;
 }
 
 .payload-overlay h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    animation: pulse 2s infinite ease-in-out;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    /* Hergebruik de pulse animatie die we eerder maakten */
+    animation: pulse 2s infinite ease-in-out; 
 }
 
 /* Hergebruik de animatie uit de vorige stap */
