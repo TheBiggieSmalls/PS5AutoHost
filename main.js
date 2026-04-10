@@ -1219,7 +1219,18 @@ async function main(userlandRW, wkOnly = false) {
                     }
                 } else {
                     updateToastMessage(toast, `${payload_info.displayTitle}: Fetching...`);
-                    let total_sz = await load_payload_into_elf_store_from_local_file(payload_info.fileName);
+let total_sz;
+let retries = 5;
+while (retries-- > 0) {
+    try {
+        total_sz = await load_payload_into_elf_store_from_local_file(payload_info.fileName);
+        break;
+    } catch (err) {
+        if (retries === 0) throw err;
+        log(`${payload_info.displayTitle}: Fetch failed, retrying... (${retries} left)`, LogLevel.WARN);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+}
 
                     if (!payload_info.toPort) {
                         if (wkOnly) {
