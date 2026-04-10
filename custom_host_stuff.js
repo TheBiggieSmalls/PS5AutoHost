@@ -58,7 +58,7 @@ async function run(wkonly = false, animate = true) {
             setTimeout(() => {
                 log("Automatically loading " + autoPayloadName + "...", LogLevel.INFO);
                 window.dispatchEvent(new CustomEvent(MAINLOOP_EXECUTE_PAYLOAD_REQUEST, { detail: payload }));
-            }, 2000); 
+            }, 3500); 
         }
             }, { once: true });
         }
