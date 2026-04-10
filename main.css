@@ -349,3 +349,14 @@ a:focus {
     50% { opacity: 0.5; }
     100% { opacity: 1; }
 }
+
+.loading-payload-msg {
+    grid-column: 1 / -1; /* Spans across all grid columns */
+    text-align: center;
+    padding: 3rem;
+    background-color: var(--surface-color-primary);
+    border-radius: 1.25rem;
+    color: var(--text-color-primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
