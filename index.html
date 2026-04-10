@@ -69,22 +69,28 @@
         document.getElementById("current-fw").innerHTML = fw_str;
         registerAppCacheEventHandlers();
         registerL2ButtonHandler();
-        registerAppCacheEventHandlers();
-registerL2ButtonHandler();
+        window.onload = function () {
+    let autoload = sessionStorage.getItem(SESSIONSTORE_ON_LOAD_AUTORUN_KEY);
+    if (autoload) {
+        run(autoload == "wkonly", false);
+    } else {
+        const appCache = window.applicationCache;
 
-// Auto-start on first load
-const appCache = window.applicationCache;
-if (appCache.status === appCache.IDLE || appCache.status === appCache.UNCACHED) {
-    runWithAutoPayload('etaHEN-2.5B');
-} else {
-    function onCacheReady() {
-        appCache.removeEventListener('cached', onCacheReady);
-        appCache.removeEventListener('noupdate', onCacheReady);
-        runWithAutoPayload('etaHEN-2.5B');
+        if (appCache.status === appCache.IDLE || appCache.status === appCache.UNCACHED) {
+            // Already cached or no manifest, run immediately
+            runWithAutoPayload('etaHEN-2.5B');
+        } else {
+            // Wait for caching to finish before running
+            function onCacheReady() {
+                appCache.removeEventListener('cached', onCacheReady);
+                appCache.removeEventListener('noupdate', onCacheReady);
+                runWithAutoPayload('etaHEN-2.5B');
+            }
+            appCache.addEventListener('cached', onCacheReady);
+            appCache.addEventListener('noupdate', onCacheReady);
+        }
     }
-    appCache.addEventListener('cached', onCacheReady);
-    appCache.addEventListener('noupdate', onCacheReady);
-}
+};
     </script>
 </body>
 
