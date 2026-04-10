@@ -327,3 +327,25 @@ a:focus {
 .mb-2 { margin-bottom: 0.5rem !important; }
 .mb-3 { margin-bottom: 1rem !important; }
 .mb-4 { margin-bottom: 1.5rem !important; }
+
+.loading-rect {
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--surface-color-primary); /* Uses your existing grey theme */
+    border-radius: 1.25rem;
+    width: 40%; /* Wider than a standard button for readability */
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Optional: Add a pulse effect to the text */
+.loading-rect p.payload-btn-title {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
