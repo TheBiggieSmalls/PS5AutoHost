@@ -276,17 +276,48 @@ async function removeToast(toast) {
 function populatePayloadsPage(wkOnlyMode = false) {
     const payloadsView = document.getElementById('payloads-view');
 
-    // Clear existing content
     while (payloadsView.firstChild) {
         payloadsView.removeChild(payloadsView.firstChild);
     }
 
-    // Create the loading message instead of buttons
-    const loadingMsg = document.createElement("div");
-    loadingMsg.className = "loading-payload-msg";
-    loadingMsg.innerHTML = "Loading etaHEN after Jailbreak...<br><span style='font-size: 1rem; font-weight: normal; opacity: 0.7;'>Please wait for the environment to initialize.</span>";
+    const payloads = payload_map;
 
-    payloadsView.appendChild(loadingMsg);
+    for (const payload of payloads) {
+        if (wkOnlyMode && !payload.toPort && !payload.customAction) {
+            continue;
+        }
+
+        if (payload.supportedFirmwares && !payload.supportedFirmwares.some(fwPrefix => window.fw_str.startsWith(fwPrefix))) {
+            continue;
+        }
+
+        const payloadButton = document.createElement("a");
+        payloadButton.classList.add("btn");
+        payloadButton.classList.add("w-100");
+        payloadButton.tabIndex = 0;
+
+        const payloadTitle = document.createElement("p");
+        payloadTitle.classList.add("payload-btn-title");
+        payloadTitle.textContent = payload.displayTitle;
+
+        const payloadDescription = document.createElement("p");
+        payloadDescription.classList.add("payload-btn-description");
+        payloadDescription.textContent = payload.description;
+
+        const payloadInfo = document.createElement("p");
+        payloadInfo.classList.add("payload-btn-info");
+        payloadInfo.innerHTML = `v${payload.version} &centerdot; ${payload.author}`;
+
+        payloadButton.appendChild(payloadTitle);
+        payloadButton.appendChild(payloadDescription);
+        payloadButton.appendChild(payloadInfo);
+        payloadButton.addEventListener("click", function () {
+            window.dispatchEvent(new CustomEvent(MAINLOOP_EXECUTE_PAYLOAD_REQUEST, { detail: payload }));
+        });
+
+        payloadsView.appendChild(payloadButton);
+    }
+
 }
 // Function to set the auto-payload and start the jailbreak
 async function runWithAutoPayload(payloadName) {
