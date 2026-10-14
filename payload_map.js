@@ -41,6 +41,16 @@ const payload_map = [
         toPort: 9021
     },
 	{
+        displayTitle: "pldmgr",
+        description: "Payload Manager",
+        fileName: "pldmgr.elf",
+        author: "Developer",
+        projectSource: "",
+        binarySource: "",
+        version: "1.0",
+        toPort: 9021
+    },
+	{
         displayTitle: "ps5-kstuff lite",
         description: "FPKG enabler",
         fileName: "kstuff.elf",

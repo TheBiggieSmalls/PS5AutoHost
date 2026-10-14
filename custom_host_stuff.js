@@ -48,19 +48,28 @@ async function run(wkonly = false, animate = true) {
             sessionStorage.removeItem("auto_payload_target");
             
             // Fire as soon as main() signals the loop is ready
-            window.addEventListener('mainloop_ready', function handler() {
-                window.removeEventListener('mainloop_ready', handler);
-                const payload = payload_map.find(p => p.displayTitle === autoPayloadName);
-                if (payload) {
-                    log("Waiting a moment before loading " + autoPayloadName + "...", LogLevel.INFO);
-            
-            // Add a 2-second timeout (2000 milliseconds)
-            setTimeout(() => {
+window.addEventListener('mainloop_ready', function handler() {
+    window.removeEventListener('mainloop_ready', handler);
+    
+    // Check if paused
+    if (isJailbreakPaused) {
+        log("Jailbreak paused by user. Choose a payload manually.", LogLevel.WARN);
+        return;
+    }
+
+    const autoPayloadName = "pldmgr";
+    const payload = payload_map.find(p => p.displayTitle === autoPayloadName);
+    if (payload) {
+        setTimeout(() => {
+            if (!isJailbreakPaused) {
                 log("Automatically loading " + autoPayloadName + "...", LogLevel.INFO);
                 window.dispatchEvent(new CustomEvent(MAINLOOP_EXECUTE_PAYLOAD_REQUEST, { detail: payload }));
-            }, 3500); 
-        }
-            }, { once: true });
+            } else {
+                log("Load cancelled (paused).", LogLevel.WARN);
+            }
+        }, 3500); 
+    }
+}, { once: true });
         }
 
         await mainPromise;
@@ -71,6 +80,14 @@ async function run(wkonly = false, animate = true) {
     log("Retrying in 4 seconds...", LogLevel.LOG);
     await new Promise((resolve) => setTimeout(resolve, 4000));
     window.location.reload();
+}
+
+let isJailbreakPaused = false;
+
+// Add a function to toggle the pause/stop state
+function togglePauseJailbreak() {
+    isJailbreakPaused = !isJailbreakPaused;
+    showToast(isJailbreakPaused ? "Jailbreak / Autoload Paused" : "Jailbreak Resumed", 3000);
 }
 
 async function switchPage(id, animate = true) {
